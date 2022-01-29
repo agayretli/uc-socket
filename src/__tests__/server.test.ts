@@ -9,7 +9,6 @@ const Client = require('socket.io-client');
 
 jest.setTimeout(30000);
 
-// eslint-disable-next-line no-undef
 describe('basic socket.io example', () => {
     let io: any;
     let serverSocket: any;
