@@ -30,6 +30,14 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
     });
+
+    socket.on('sendEmailOnLogin', (email) => {
+        console.log('sendEmailOnLogin');
+        console.log(email);
+        socket.data.email = email;
+        console.log(socket.data.email);
+        io.sockets.emit('userLogin', email);
+    });
 });
 
 server.listen(PORT, () => {
