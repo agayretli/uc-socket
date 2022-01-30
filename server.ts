@@ -38,6 +38,18 @@ io.on('connection', (socket: socketIO.Socket) => {
         console.log(socket.data.email);
         io.sockets.emit('userLogin', email);
     });
+
+    socket.on('getActiveUsers', async (callback) => {
+        const clients = await io.fetchSockets();
+        const emails = [];
+        for (let i = 0; i < clients.length; i += 1) {
+            emails.push(clients[i].data.email);
+        }
+        console.log(emails);
+        callback({
+            users: emails,
+        });
+    });
 });
 
 server.listen(PORT, () => {
