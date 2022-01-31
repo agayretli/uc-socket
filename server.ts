@@ -31,23 +31,34 @@ io.on('connection', (socket: socketIO.Socket) => {
         console.log(`User disconnected: ${socket.id}`);
     });
 
-    socket.on('sendEmailOnLogin', (email) => {
-        console.log('sendEmailOnLogin');
-        console.log(email);
+    socket.on('sendInfoOnLogin', (email, name) => {
+        console.log('sendInfoOnLogin');
         socket.data.email = email;
-        console.log(socket.data.email);
+        socket.data.name = name;
         io.sockets.emit('userLogin', email);
     });
 
     socket.on('getActiveUsers', async (callback) => {
+        console.log('getActiveUsers');
         const clients = await io.fetchSockets();
-        const emails = [];
+        const info = [];
         for (let i = 0; i < clients.length; i += 1) {
-            emails.push(clients[i].data.email);
+            const array = [
+                {
+                    Field: 'email',
+                    Value: clients[i].data.email,
+                },
+                {
+                    Field: 'name',
+                    Value: clients[i].data.name,
+                },
+            ];
+            const obj = array.reduce((acc, { Field, Value }) => ({ ...acc, [Field]: Value }), {});
+            info.push(obj);
         }
-        console.log(emails);
+        console.log(JSON.stringify(info));
         callback({
-            users: emails,
+            users: JSON.stringify(info),
         });
     });
 });
